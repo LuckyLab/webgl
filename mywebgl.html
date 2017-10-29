@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script src="mywebgl.js"></script>
+    <script>
+        const webgl = new MyWebgl(document.getElementById('canvas'));
+
+        webgl.vertexShaderSource = 
+        `attribute vec2 a_position;
+        uniform vec2 u_resolution;
+        void main() {
+            vec2 zeroToOne = a_position / u_resolution;
+            vec2 zeroToTwo = zeroToOne * 2.0;
+            vec2 clipSpace = zeroToTwo - 1.0;
+            gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+        }`
+        webgl.fragmentShaderSource = 
+        `precision mediump float;
+        void main ()
+        {
+            gl_FragColor = vec4(1, 0, 0.5, 1);
+        }`
+
+        webgl.createVertexShader();
+        webgl.createFragmentShader();
+        webgl.positions = [
+            10, 20,
+            80, 20,
+            10, 30,
+            10, 30,
+            80, 20,
+            80, 30,
+        ]
+        webgl.createProgram();
+        webgl.createPositionBuffer();
+        webgl.render();
+    </script>
+</body>
+</html>
